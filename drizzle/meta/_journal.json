@@ -8,6 +8,13 @@
       "when": 1751619936937,
       "tag": "0000_lucky_black_knight",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1751645957342,
+      "tag": "0001_normal_black_widow",
+      "breakpoints": true
     }
   ]
 }
