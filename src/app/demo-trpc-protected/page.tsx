@@ -1,9 +1,11 @@
-"use client";
+"use client";;
+import { useTRPC } from "@/trpc/client";
 
-import { trpc } from "@/trpc/client";
+import { useQuery } from "@tanstack/react-query";
 
 export default function DemoTrpcProtected() {
-  const greeting = trpc.protected.useQuery({ text: "world" });
+  const trpc = useTRPC();
+  const greeting = useQuery(trpc.protected.queryOptions({ text: "world" }));
   if (greeting.isLoading) {
     return <div>Loading...</div>;
   }
