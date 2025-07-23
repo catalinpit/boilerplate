@@ -1,15 +1,19 @@
 "use client";
-
-import { trpc } from "@/trpc/client";
+import { useTRPC } from "@/trpc/client";
+import { useQuery, useMutation } from "@tanstack/react-query";
 import { useState } from "react";
 
 export default function DemoTrpc() {
-  const greeting = trpc.hello.useQuery({ text: "world" });
-  const getPresignedUrl = trpc.files.getUploadUrl.useMutation();
+  const trpc = useTRPC();
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [uploading, setUploading] = useState(false);
   const [uploadedFileUrl, setUploadedFileUrl] = useState<string | null>(null);
   const [uploadError, setUploadError] = useState<string | null>(null);
+
+  const greeting = useQuery(trpc.hello.queryOptions({ text: "world" }));
+  const getPresignedUrl = useMutation(
+    trpc.files.getUploadUrl.mutationOptions()
+  );
 
   const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -32,8 +36,6 @@ export default function DemoTrpc() {
         filename: selectedFile.name,
         contentType: selectedFile.type,
       });
-
-      console.log("presignedUrl", presignedUrl);
 
       const response = await fetch(presignedUrl.uploadUrl, {
         method: "PUT",

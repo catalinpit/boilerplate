@@ -1,12 +1,12 @@
 import { z } from "zod";
-import { protectedProcedure, createTRPCRouter, baseProcedure } from "../init";
+import { protectedProcedure, createTRPCRouter } from "../init";
 import { s3Client } from "@/lib/s3-client";
 import { PutObjectCommand } from "@aws-sdk/client-s3";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 import { TRPCError } from "@trpc/server";
 
 export const filesRouter = createTRPCRouter({
-  getUploadUrl: baseProcedure
+  getUploadUrl: protectedProcedure
     .input(
       z.object({
         filename: z.string().min(4),

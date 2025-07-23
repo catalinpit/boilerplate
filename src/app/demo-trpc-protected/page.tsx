@@ -1,10 +1,11 @@
 "use client";
-
-import { trpc } from "@/trpc/client";
+import { useTRPC } from "@/trpc/client";
 import Link from "next/link";
+import { useQuery } from "@tanstack/react-query";
 
 export default function DemoTrpcProtected() {
-  const greeting = trpc.protected.useQuery({ text: "world" });
+  const trpc = useTRPC();
+  const greeting = useQuery(trpc.protected.queryOptions({ text: "world" }));
 
   if (greeting.isLoading) {
     return (
@@ -37,12 +38,12 @@ export default function DemoTrpcProtected() {
           </div>
           <p className="text-red-600">{greeting.error.message}</p>
           <div className="mt-4">
-            <a
+            <Link
               href="/login"
               className="inline-flex items-center px-3 py-2 border border-red-300 rounded-md text-sm font-medium text-red-700 bg-red-50 hover:bg-red-100"
             >
               Sign In
-            </a>
+            </Link>
           </div>
         </div>
       </div>
