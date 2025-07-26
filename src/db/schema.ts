@@ -4,6 +4,8 @@ import {
   timestamp,
   boolean,
   integer,
+  uuid,
+  jsonb,
 } from "drizzle-orm/pg-core";
 
 export const user = pgTable("user", {
@@ -64,4 +66,82 @@ export const verification = pgTable("verification", {
   updatedAt: timestamp("updated_at").$defaultFn(
     () => /* @__PURE__ */ new Date()
   ),
+});
+
+// Reddit Monitoring Tables
+export const redditMonitors = pgTable("reddit_monitors", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  name: text("name").notNull(),
+  description: text("description"),
+  subreddits: jsonb("subreddits").$type<string[]>().notNull().default([]),
+  keywords: jsonb("keywords").$type<string[]>().notNull(),
+  isActive: boolean("is_active").notNull().default(true),
+  checkInterval: integer("check_interval").notNull().default(5), // minutes
+  lastChecked: timestamp("last_checked"),
+  userId: text("user_id")
+    .notNull()
+    .references(() => user.id, { onDelete: "cascade" }),
+  createdAt: timestamp("created_at")
+    .$defaultFn(() => new Date())
+    .notNull(),
+  updatedAt: timestamp("updated_at")
+    .$defaultFn(() => new Date())
+    .notNull(),
+});
+
+export const redditPosts = pgTable("reddit_posts", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  redditId: text("reddit_id").notNull().unique(),
+  title: text("title").notNull(),
+  content: text("content"),
+  author: text("author").notNull(),
+  subreddit: text("subreddit").notNull(),
+  url: text("url"),
+  permalink: text("permalink").notNull(),
+  score: integer("score").notNull().default(0),
+  numComments: integer("num_comments").notNull().default(0),
+  isNsfw: boolean("is_nsfw").notNull().default(false),
+  matchedKeywords: jsonb("matched_keywords").$type<string[]>().notNull(),
+  monitorId: uuid("monitor_id")
+    .notNull()
+    .references(() => redditMonitors.id, { onDelete: "cascade" }),
+  createdAt: timestamp("created_at").notNull(), // Reddit post creation time
+  foundAt: timestamp("found_at")
+    .$defaultFn(() => new Date())
+    .notNull(), // When we found it
+});
+
+export const redditComments = pgTable("reddit_comments", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  redditId: text("reddit_id").notNull().unique(),
+  content: text("content").notNull(),
+  author: text("author").notNull(),
+  subreddit: text("subreddit").notNull(),
+  postId: text("post_id").notNull(), // Reddit post ID this comment belongs to
+  permalink: text("permalink").notNull(),
+  score: integer("score").notNull().default(0),
+  isNsfw: boolean("is_nsfw").notNull().default(false),
+  matchedKeywords: jsonb("matched_keywords").$type<string[]>().notNull(),
+  monitorId: uuid("monitor_id")
+    .notNull()
+    .references(() => redditMonitors.id, { onDelete: "cascade" }),
+  createdAt: timestamp("created_at").notNull(), // Reddit comment creation time
+  foundAt: timestamp("found_at")
+    .$defaultFn(() => new Date())
+    .notNull(), // When we found it
+});
+
+export const monitorRuns = pgTable("monitor_runs", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  monitorId: uuid("monitor_id")
+    .notNull()
+    .references(() => redditMonitors.id, { onDelete: "cascade" }),
+  status: text("status", { enum: ["running", "completed", "failed"] }).notNull(),
+  postsFound: integer("posts_found").notNull().default(0),
+  commentsFound: integer("comments_found").notNull().default(0),
+  errorMessage: text("error_message"),
+  startedAt: timestamp("started_at")
+    .$defaultFn(() => new Date())
+    .notNull(),
+  completedAt: timestamp("completed_at"),
 });

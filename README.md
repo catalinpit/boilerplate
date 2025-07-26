@@ -81,16 +81,30 @@ src/
 - `npm run db:migrate` - Run database migrations
 - `npm run db:generate` - Generate database migrations
 - `npm run db:studio` - Open Drizzle Studio
+- `npm run check-reddit-setup` - Verify Reddit API configuration
 
 ## 🚀 Features
 
 - **Authentication**: Complete auth system with email/password and OAuth providers
 - **Database**: PostgreSQL with Drizzle ORM for type-safe database operations
 - **API**: tRPC for end-to-end type safety
+- **Reddit Monitoring**: Automated keyword monitoring across multiple subreddits
 - **File Uploads**: S3 integration
 - **Payments**: Polar integration for payment processing
 - **Responsive Design**: Tailwind CSS for modern UI
 - **Type Safety**: Full TypeScript support throughout the stack
+
+### 🆕 Reddit Keyword Monitoring Tool
+
+This boilerplate now includes a comprehensive Reddit monitoring system that allows users to:
+
+- **Track Keywords**: Monitor multiple subreddits for specific keywords
+- **Automated Scheduling**: Set custom monitoring intervals (5-60 minutes)
+- **Real-time Results**: View found posts and comments with detailed analytics
+- **Smart Filtering**: Prevent duplicates and manage rate limits
+- **Beautiful Dashboard**: Modern UI for managing monitors and viewing results
+
+For detailed setup and usage instructions, see [REDDIT_MONITOR_README.md](./REDDIT_MONITOR_README.md).
 
 ## 📖 Documentation
 

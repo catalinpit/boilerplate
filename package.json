@@ -11,7 +11,8 @@
     "db:migrate": "drizzle-kit migrate --config=drizzle.config.ts",
     "db:generate": "drizzle-kit generate --config=drizzle.config.ts",
     "db:studio": "drizzle-kit studio",
-    "db:clear": "tsx ./src/db/clear.ts"
+    "db:clear": "tsx ./src/db/clear.ts",
+    "check-reddit-setup": "node scripts/check-reddit-setup.js"
   },
   "dependencies": {
     "@tanstack/react-query": "^5.81.5",
@@ -24,10 +25,12 @@
     "dotenv-expand": "^12.0.2",
     "drizzle-orm": "^0.44.2",
     "next": "15.3.4",
+    "node-cron": "^4.2.1",
     "postgres": "^3.4.7",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "server-only": "^0.0.1",
+    "snoowrap": "^1.23.0",
     "superjson": "^2.2.2",
     "zod": "^3.25.75"
   },
@@ -35,6 +38,7 @@
     "@eslint/eslintrc": "^3",
     "@tailwindcss/postcss": "^4",
     "@types/node": "^20",
+    "@types/node-cron": "^3.0.11",
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "drizzle-kit": "^0.31.4",

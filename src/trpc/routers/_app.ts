@@ -1,5 +1,7 @@
 import { z } from "zod";
 import { baseProcedure, createTRPCRouter, protectedProcedure } from "../init";
+import { redditRouter } from "./reddit";
+
 export const appRouter = createTRPCRouter({
   hello: baseProcedure
     .input(
@@ -23,6 +25,7 @@ export const appRouter = createTRPCRouter({
         greeting: `protected hello ${opts.input.text} from user ${opts.ctx.auth.user.id}`,
       };
     }),
+  reddit: redditRouter,
 });
 // export type definition of API
 export type AppRouter = typeof appRouter;
