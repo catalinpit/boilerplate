@@ -1,18 +1,13 @@
-import { z } from "zod";
-import { protectedProcedure, createTRPCRouter } from "../init";
+import { protectedProcedure, createTRPCRouter } from "../../init";
 import { s3Client } from "@/lib/s3-client";
 import { GetObjectCommand, PutObjectCommand } from "@aws-sdk/client-s3";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 import { TRPCError } from "@trpc/server";
+import { ZDownloadUrlInputSchema, ZUploadUrlInputSchema } from "./schema";
 
 export const filesRouter = createTRPCRouter({
   getUploadUrl: protectedProcedure
-    .input(
-      z.object({
-        filename: z.string().min(4),
-        contentType: z.string().min(4),
-      })
-    )
+    .input(ZUploadUrlInputSchema)
     .mutation(async ({ input }) => {
       const { filename, contentType } = input;
 
@@ -41,7 +36,7 @@ export const filesRouter = createTRPCRouter({
       }
     }),
   getDownloadUrl: protectedProcedure
-    .input(z.object({ key: z.string() }))
+    .input(ZDownloadUrlInputSchema)
     .query(async ({ input }) => {
       const { key } = input;
 

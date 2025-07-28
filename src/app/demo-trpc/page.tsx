@@ -1,5 +1,6 @@
 "use client";
 import { useTRPC } from "@/trpc/client";
+import { ACCEPTED_FILE_TYPES } from "@/utils/constants";
 import { useQuery, useMutation } from "@tanstack/react-query";
 import { useState } from "react";
 
@@ -130,6 +131,7 @@ export default function DemoTrpc() {
               type="file"
               onChange={handleFileSelect}
               className="hidden"
+              accept={ACCEPTED_FILE_TYPES.join(",")}
             />
 
             <label
